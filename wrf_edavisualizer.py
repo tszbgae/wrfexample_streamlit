@@ -76,4 +76,14 @@ for iv,v in enumerate(vs):
         dfa.to_csv('0.csv')
         
 sns.jointplot(data=dfa, x='HFX', y='QFX', hue="Points")
+plt.show()
+
+fig2=plt.figure(figsize=(7,3),dpi=100)  
+for ipt,pt in enumerate(pts):
+    sns.lineplot(data=dfa, x=dfa.index,y='HFX',hue='Points',style='-')
+ax2 = plt.twinx()
+for ipt,pt in enumerate(pts):
+    sns.lineplot(data=dfa, x=dfa.index,y='QFX',hue='Points',ax=ax2,legend=False,style='--')
+#sns.lineplot(data=df.column2, color="b", ax=ax2)
+plt.show()
 
