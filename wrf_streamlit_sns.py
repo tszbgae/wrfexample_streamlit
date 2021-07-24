@@ -36,6 +36,7 @@ tree = KDTree(np.c_[lons.ravel(), lats.ravel()])
 
 latmin,latmax,lonmin,lonmax=lats.min(),lats.max(),lons.min(),lons.max()
 
+
 vlist=['Q2','T2','U10','V10','PBLH','HFX','QFX']
 vlistcopy=vlist.copy()
 v1 = st.sidebar.selectbox('select variable 1', tuple(vlist))
