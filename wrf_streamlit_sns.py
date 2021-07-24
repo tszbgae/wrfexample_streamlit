@@ -24,6 +24,7 @@ import cartopy.feature as cfeature
 import os
 import seaborn as sns
 import pandas as pd
+from scipy.spatial import KDTree
 #%%
 os.chdir('/media/ats/Backup/data/wrfexample')
 #open example file and get listing of variable names
@@ -31,20 +32,55 @@ ncf=Dataset('/media/ats/Backup/data/cleveland/wrfout_d01_2019-05-26_06:15:00')
 print(ncf.variables.keys())
 lats=ncf.variables['XLAT'][0,:,:]
 lons=ncf.variables['XLONG'][0,:,:]
+tree = KDTree(np.c_[lons.ravel(), lats.ravel()])
 
-
+latmin,latmax,lonmin,lonmax=lats.min(),lats.max(),lons.min(),lons.max()
 
 vlist=['Q2','T2','U10','V10','PBLH','HFX','QFX']
 vlistcopy=vlist.copy()
 v1 = st.sidebar.selectbox('select variable 1', tuple(vlist))
 vlistcopy.remove(v1)
 v2 = st.sidebar.selectbox('select variable 2', tuple(vlistcopy))
+# st.sidebar.write('Point 1')
+# latslider=st.sidebar.slider('Choose Lat Point 1',1,36)
+# lonslider=st.sidebar.slider('Choose Lon Point 1',1,36)
+# st.sidebar.write('Point 2')
+# latslider2=st.sidebar.slider('Choose Lat Point 2',1,36)
+# lonslider2=st.sidebar.slider('Choose Lon Point 2',1,36)
+
+
 st.sidebar.write('Point 1')
-latslider=st.sidebar.slider('Choose Lat Point 1',1,36)
-lonslider=st.sidebar.slider('Choose Lon Point 1',1,36)
+latslider=st.sidebar.text_input('Choose Lat Point 1',value=39)
+lonslider=st.sidebar.text_input('Choose Lon Point 1',value=-84)
 st.sidebar.write('Point 2')
-latslider2=st.sidebar.slider('Choose Lat Point 2',1,36)
-lonslider2=st.sidebar.slider('Choose Lon Point 2',1,36)
+latslider2=st.sidebar.text_input('Choose Lat Point 2',value=40)
+lonslider2=st.sidebar.text_input('Choose Lon Point 2',value=-83)
+
+def outofbounds(inval,vmin,vmax):
+    if inval>vmax or inval<vmin:
+        return True
+    else:
+        return False
+
+
+if outofbounds(float(latslider),latmin,latmax)==True or outofbounds(float(lonslider),lonmin,lonmax)==True:
+    st.sidebar.write('Point 1 is out of bounds')
+
+if outofbounds(float(latslider2),latmin,latmax)==True or outofbounds(float(lonslider2),lonmin,lonmax)==True:
+    st.sidebar.write('Point 1 is out of bounds')                             
+
+
+dd, ii = tree.query([[lonslider, latslider]])
+nptx=int(np.floor(ii[0]/36))
+npty=ii[0]-nptx*36
+
+dd, ii = tree.query([[lonslider2, latslider2]])
+npty2=int(np.floor(ii[0]/36))
+nptx2=ii[0]-npty2*36
+
+st.sidebar.write('Point1 lon {} and lat {}, point2 lon {} and lat {}'.format(nptx,npty,nptx2,npty2))  
+
+latslider,lonslider,latslider2,lonslider2=npty+1,nptx+1,npty2+1,nptx2+1
 
 jttype = st.sidebar.selectbox('joint plot type', ('scatter','kde','hist','hex'))
 
