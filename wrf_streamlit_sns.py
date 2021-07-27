@@ -26,9 +26,9 @@ import seaborn as sns
 import pandas as pd
 from scipy.spatial import KDTree
 #%%
-os.chdir('/media/ats/Backup/data/wrfexample')
+#os.chdir('/media/ats/Backup/data/wrfexample')
 #open example file and get listing of variable names
-ncf=Dataset('/media/ats/Backup/data/cleveland/wrfout_d01_2019-05-26_06:15:00')
+ncf=Dataset('wrf.nc')
 print(ncf.variables.keys())
 lats=ncf.variables['XLAT'][0,:,:]
 lons=ncf.variables['XLONG'][0,:,:]
