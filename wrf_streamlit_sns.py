@@ -66,6 +66,8 @@ def outofbounds(inval,vmin,vmax):
         return False
 
 
+latslider,lonslider,latslider2,lonslider2=float(latslider),float(lonslider),float(latslider2),float(lonslider2)
+
 if outofbounds(float(latslider),latmin,latmax)==True or outofbounds(float(lonslider),lonmin,lonmax)==True:
     st.sidebar.write('Point 1 is out of bounds')
 
